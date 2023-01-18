@@ -1,0 +1,435 @@
+AJAX Introduction
+
+* AJAX stands for Asynchronous JavaScript And XML.
+* Update a web page without reloading the page.
+* Ajax helps fetching data Asyncronously without interfering with the existing page.
+* Request data from a server - after the page has loaded
+* Receive data from a server - after the page has loaded
+* Send data to a server - in the background
+-----------------------------------------------------------------------------------------
+Ex:
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="demo">
+  <h2>Let AJAX change this text</h2>
+  <button type="button" onclick="loadDoc()">Change Content</button>
+</div>
+
+</body>
+</html>
+
+* The HTML page contains a <div> section and a <button>.
+
+* The <div> section is used to display information from a server.
+
+* The <button> calls a function (if it is clicked).
+
+* The function requests data from a web server and displays it:
+-----------------------------------------------------------------------------------------
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+     document.getElementById("demo").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "ajax_info.txt", true);
+  xhttp.send();
+}
+
+* The "ajax_info.txt" file used in the example above, is a simple text file and looks like this:
+
+<h1>AJAX</h1>
+<p>AJAX is not a programming language.</p>
+<p>AJAX is a technique for accessing web servers from a web page.</p>
+<p>AJAX stands for Asynchronous JavaScript And XML.</p>
+----------------------------------------------------------------------------------------------------
+XMLHttpRequest Object Methods:(xhr object)
+* 
+
+Method	                             		     		Description
+
+new XMLHttpRequest()	 				Creates a new XMLHttpRequest object
+---------------------------------------------------------------------------------
+abort()							Cancels the current request
+-------------------------------------------------------------------------------
+getAllResponseHeaders()				Returns header information
+-----------------------------------------------------------------------------------
+getResponseHeader()					Returns specific header information
+--------------------------------------------------------------------------------------
+open(method,url,async,user,psw)			Specifies the request
+								method: the request type GET or POST
+								url: the file location
+								async: true (asynchronous) or false (synchronous)
+								user: optional user name
+								psw: optional password
+------------------------------------------------------------------------------------------------
+send()							Sends the request to the server
+								Used for GET requests
+----------------------------------------------------------------------------------------------------
+send(string)   						Sends the request to the server.
+								Used for POST requests
+--------------------------------------------------------------------------------------------------------
+setRequestHeader()					Adds a label/value pair to the header to be sent
+---------------------------------------------------------------------------------------------------------------
+
+
+XMLHttpRequest Object Properties:
+
+Property	                                           Description
+------------------------------------------------------------------------------------------------
+onreadystatechange					Defines a function to be called when the readyState
+								property changes
+------------------------------------------------------------------------------------------------
+readyState							Holds the status of the XMLHttpRequest.
+								0: request not initialized
+								1: server connection established
+								2: request received
+								3: processing request
+								4: request finished and response is ready
+------------------------------------------------------------------------------------------------
+responseText						Returns the response data as a string
+------------------------------------------------------------------------------------------------
+responseXML						Returns the response data as XML data
+------------------------------------------------------------------------------------------------
+status							Returns the status-number of a request
+								200: "OK"
+								403: "Forbidden"
+								404: "Not Found"
+								For a complete list go to the Http Messages Reference
+------------------------------------------------------------------------------------------------
+statusText							Returns the status-text (e.g. "OK" or "Not Found")
+------------------------------------------------------------------------------------------------
+
+
+Send a Request To a Server:
+* To send a request to a server, we use the open() and send() methods of the XMLHttpRequest object:
+ex:
+xhttp.open("GET", "ajax_info.txt", true);
+xhttp.send();
+
+
+Method							Description
+----------------------------------------------------------------------------------------------------
+open(method, url, async)				Specifies the type of request
+								method: the type of request: GET or POST
+     								url: the server (file) location
+								async: true (asynchronous) or false (synchronous)
+----------------------------------------------------------------------------------------------------
+send()							Sends the request to the server (used for GET)
+----------------------------------------------------------------------------------------------------
+send(string)						Sends the request to the server (used for POST)
+----------------------------------------------------------------------------------------------------
+
+GET or POST?
+GET is simpler and faster than POST, and can be used in most cases.
+
+However, always use POST requests when:
+
+* A cached file is not an option (update a file or database on the server).
+* Sending a large amount of data to the server (POST has no size limitations).
+* Sending user input (which can contain unknown characters), POST is more robust and secure than GET.
+
+GET Requests:
+A simple GET request:
+
+Example
+xhttp.open("GET", "demo_get.asp", true);
+xhttp.send();
+--------------------------------------------------------------------------------------------------------
+In the example above, you may get a cached result. To avoid this, add a unique ID to the URL:
+
+Example
+xhttp.open("GET", "demo_get.asp?t=" + Math.random(), true);
+xhttp.send();
+-------------------------------------------------------------------------------------------------------
+
+If you want to send information with the GET method, add the information to the URL:
+
+Example
+xhttp.open("GET", "demo_get2.asp?fname=Henry&lname=Ford", true);
+xhttp.send();
+-------------------------------------------------------------------------------------------------------
+
+POST Requests:
+A simple POST request:
+
+Example
+xhttp.open("POST", "demo_post.asp", true);
+xhttp.send();
+------------------------------------------------------------------------------------------------------
+To POST data like an HTML form, add an HTTP header with setRequestHeader(). Specify 
+the data you want to send in the send() method:
+
+Example
+xhttp.open("POST", "demo_post2.asp", true);
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp.send("fname=Henry&lname=Ford");
+------------------------------------------------------------------------------------------------------
+
+Method     								Description
+------------------------------------------------------------------------------------------------------
+setRequestHeader(header, value)    		Adds HTTP headers to the request
+								header: specifies the header name
+								value: specifies the header value
+------------------------------------------------------------------------------------------------------
+
+The url - A File On a Server:
+The url parameter of the open() method, is an address to a file on a server:
+ex:
+xhttp.open("GET", "ajax_test.asp", true);
+
+The file can be any kind of file, like .txt and .xml, or server scripting files like .asp 
+and .php (which can perform actions on the server before sending the response back).
+------------------------------------------------------------------------------------------------------
+
+Asynchronous - True or False?
+Server requests should be sent asynchronously.
+
+The async parameter of the open() method should be set to true:
+
+xhttp.open("GET", "ajax_test.asp", true);
+By sending asynchronously, the JavaScript does not have to wait for the server response, but can instead:
+
+execute other scripts while waiting for server response
+deal with the response after the response is ready.
+----------------------------------------------------------------------------------------------------------
+
+The onreadystatechange Property
+With the XMLHttpRequest object you can define a function to be executed when the request receives an answer.
+
+The function is defined in the onreadystatechange property of the XMLHttpResponse object:
+
+Example
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    document.getElementById("demo").innerHTML = this.responseText;
+  }
+};
+xhttp.open("GET", "ajax_info.txt", true);
+xhttp.send();
+
+* The "ajax_info.txt" file used in the example above, is a simple text file and looks like this:
+
+<h1>AJAX</h1>
+<p>AJAX is not a programming language.</p>
+<p>AJAX is a technique for accessing web servers from a web page.</p>
+<p>AJAX stands for Asynchronous JavaScript And XML.</p>
+--------------------------------------------------------------------------------------------------------------
+
+Synchronous Request:
+To execute a synchronous request, change the third parameter in the open() method to false:
+
+xhttp.open("GET", "ajax_info.txt", false);
+Sometimes async = false are used for quick testing. You will also find synchronous requests in older JavaScript code.
+
+Since the code will wait for server completion, there is no need for an onreadystatechange function:
+
+Example
+xhttp.open("GET", "ajax_info.txt", false);
+xhttp.send();
+document.getElementById("demo").innerHTML = xhttp.responseText;
+-----------------------------------------------------------------------------------------------------------------------
+NOTE:
+* Synchronous XMLHttpRequest (async = false) is not recommended because the JavaScript will stop executing until the server
+  response is ready. If the server is busy or slow, the application will hang or stop.
+
+* Synchronous XMLHttpRequest is in the process of being removed from the web standard, but this process can take many years.
+
+* Modern developer tools are encouraged to warn about using synchronous requests and may throw an InvalidAccessError exception when it occurs.
+-----------------------------------------------------------------------------------------------------------------------------------------------
+    
+
+AJAX - Server Response:
+
+The onreadystatechange Property
+The readyState property holds the status of the XMLHttpRequest.
+
+The onreadystatechange property defines a function to be executed when the readyState changes.
+
+The status property and the statusText property holds the status of the XMLHttpRequest object.
+
+--------------------------------------------------------------------------------------------
+Property									Description
+--------------------------------------------------------------------------------------------
+onreadystatechange						Defines a function to be called when 
+									the readyState property changes
+--------------------------------------------------------------------------------------------
+readyState 							Holds the status of the XMLHttpRequest.
+									0: request not initialized
+									1: server connection established
+									2: request received
+									3: processing request
+									4: request finished and response is ready
+--------------------------------------------------------------------------------------------
+status 								200: "OK"
+									403: "Forbidden"
+									404: "Page not found"
+									For a complete list go to the Http Messages Reference
+------------------------------------------------------------------------------------------------------
+statusText								Returns the status-text (e.g. "OK" or "Not Found")   
+---------------------------------------------------------------------------------------------------------
+Example
+function loadDoc() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo").innerHTML =
+            this.responseText;
+       }
+    };
+    xhttp.open("GET", "ajax_info.txt", true);
+    xhttp.send();
+}
+----------------------------------------------------------------------------------------------------------
+
+Using a Callback Function:
+A callback function is a function passed as a parameter to another function.
+
+If you have more than one AJAX task in a website, you should create one function for executing
+ the XMLHttpRequest object, and one callback function for each AJAX task.
+
+The function call should contain the URL and what function to call when the response is ready.
+------------------------------------------------------------------------------------------------------
+Example
+loadDoc("url-1", myFunction1);
+
+loadDoc("url-2", myFunction2);
+
+function loadDoc(url, cFunction) {
+  var xhttp;
+  xhttp=new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cFunction(this);
+    }
+ };
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
+
+function myFunction1(xhttp) {
+  // action goes here
+}
+function myFunction2(xhttp) {
+  // action goes here
+}
+----------------------------------------------------------------------------------------------------------
+
+
+Server Response Properties
+Property	         Description
+responseText	get the response data as a string
+responseXML	get the response data as XML data
+-------------------------------------------------------------------------------------------------------------
+
+Server Response Methods
+Method	                                    Description
+getResponseHeader()					Returns specific header information from the server resource
+getAllResponseHeaders()				Returns all the header information from the server resource
+-------------------------------------------------------------------------------------------------------------
+
+The responseText Property:
+The responseText property returns the server response as a JavaScript string, and you can use it accordingly:
+
+Example
+document.getElementById("demo").innerHTML = xhttp.responseText;
+--------------------------------------------------------------------------------------------------------------
+
+The responseXML Property
+The XML HttpRequest object has an in-built XML parser.
+
+The responseXML property returns the server response as an XML DOM object.
+
+Using this property you can parse the response as an XML DOM object:
+-------------------------------------------------------------------------------
+Example
+Request the file cd_catalog.xml and parse the response:
+
+xmlDoc = xhttp.responseXML;
+txt = "";
+x = xmlDoc.getElementsByTagName("ARTIST");
+for (i = 0; i < x.length; i++) {
+  txt += x[i].childNodes[0].nodeValue + "<br>";
+  }
+document.getElementById("demo").innerHTML = txt;
+xhttp.open("GET", "cd_catalog.xml", true);
+xhttp.send();
+-----------------------------------------------------------------------------------------------------------------
+
+The getAllResponseHeaders() Method:
+The getAllResponseHeaders() method returns all header information from the server response.
+
+Example
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    document.getElementById("demo").innerHTML =
+    this.getAllResponseHeaders();
+  }
+};
+-------------------------------------------------------------------------------------------------------------------
+
+The getResponseHeader() Method
+The getResponseHeader() method returns specific header information from the server response.
+
+Example
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    document.getElementById("demo").innerHTML =
+    this.getResponseHeader("Last-Modified");
+  }
+};
+xhttp.open("GET", "ajax_info.txt", true);
+xhttp.send();
+---------------------------------------------------------------------------------------------------------------------
+
+AJAX XML Example
+AJAX can be used for interactive communication with an XML file.
+
+The following example will demonstrate how a web page can fetch information from an XML file with AJAX:
+Example Explained
+When a user clicks on the "Get CD info" button above, the loadDoc() function is executed.
+
+The loadDoc() function creates an XMLHttpRequest object, adds the function to be executed when the server response
+ is ready, and sends the request off to the server.
+
+When the server response is ready, an HTML table is built, nodes (elements) are extracted from the XML file, 
+and it finally updates the element "demo" with the HTML table filled with XML data:
+------------------------------------------------------------------------------------------------------------------------
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    myFunction(this);
+    }
+  };
+  xhttp.open("GET", "cd_catalog.xml", true);
+  xhttp.send();
+}
+function myFunction(xml) {
+  var i;
+  var xmlDoc = xml.responseXML;
+  var table="<tr><th>Title</th><th>Artist</th></tr>";
+  var x = xmlDoc.getElementsByTagName("CD");
+  for (i = 0; i <x.length; i++) {
+    table += "<tr><td>" +
+    x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
+    "</td><td>" +
+    x[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue +
+    "</td></tr>";
+  }
+  document.getElementById("demo").innerHTML = table;
+}
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
